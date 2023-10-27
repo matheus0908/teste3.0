@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Acompanhamento de Fluxo dos Lotes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            color: #333333;
+        }
+
+        header {
+            background-color: #001f3f;
+            color: #ffffff;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .container {
+            background-color: #ffffff;
+            width: 80%;
+            margin: 0px auto;
+            padding: 200px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        h2 {
+            background-color: #001f3f;
+            color: #ffffff;
+            padding: 10px;
+            text-align: center;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+
+        }
+
+        select, input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: #001f3f;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+
+            
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            color: #ffffff;
+        }
+
+        li {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #001f3f;
+            
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="otc.jpg.jpeg" alt="Logo" style="position: absolute; top: 20px; left: 10px; height: 50px; width: 100px;">
+        <h1>Acompanhamento de Fluxo dos Lotes</h1>
+    </header>
+
+    <div class="container">
+        <form id="workflowForm">
+            <label for="nomeLote">Nome do Lote:</label>
+            <input type="text" id="nomeLote" required>
+
+            <label for="mesLote">Mês do Lote:</label>
+            <input type="text" id="mesLote" required>
+
+            <label for="dataEntrada">Data de Entrada:</label>
+            <input type="date" id="dataEntrada" required>
+
+            <label for="usuario">Usuário:</label>
+            <input type="text" id="usuario" required>
+
+            <label for="etapa">Etapa do Processo:</label>
+            <select id="etapa">
+                <option value="Recepção">Recepção</option>
+                <option value="Higienização">Higienização</option>
+                <option value="Digitalização A4">Digitalização A4</option>
+                <option value="Digitalização A0">Digitalização A0</option>
+                <option value="Conferência">Conferência</option>
+                <option value="Remontagem">Remontagem</option>
+                <option value="Disponibilização">Disponibilização</option>
+            </select>
+
+            <button type="button" onclick="adicionarLote()">Adicionar Lote</button>
+        </form>
+
+        <h2>Progresso dos Lotes</h2>
+        <ul id="progressoLotes"></ul>
+    </div>
+
+    <script>
+        const workflow = {};
+
+        function adicionarLote() {
+            const nomeLote = document.getElementById("nomeLote").value;
+            const mesLote = document.getElementById("mesLote").value;
+            const dataEntrada = document.getElementById("dataEntrada").value;
+            const usuario = document.getElementById("usuario").value;
+            const etapa = document.getElementById("etapa").value;
+
+            const chaveLote = `${nomeLote} - ${mesLote}`;
+            if (!workflow[chaveLote]) {
+                workflow[chaveLote] = [];
+            }
+
+            workflow[chaveLote].push({
+                dataEntrada,
+                usuario,
+                etapa
+            });
+
+            atualizarListaProgresso();
+            limparCamposForm();
+        }
+
+        function atualizarListaProgresso() {
+            const progressoLotes = document.getElementById("progressoLotes");
+            progressoLotes.innerHTML = "";
+
+            for (const lote in workflow) {
+                for (const progresso of workflow[lote]) {
+                    const itemLista = document.createElement("li");
+                    itemLista.textContent = `Lote: ${lote}, Data de Entrada: ${progresso.dataEntrada}, Usuário: ${progresso.usuario}, Etapa: ${progresso.etapa}`;
+                    progressoLotes.appendChild(itemLista);
+                }
+            }
+        }
+
+        function limparCamposForm() {
+            document.getElementById("nomeLote").value = "";
+            document.getElementById("mesLote").value = "";
+            document.getElementById("dataEntrada").value = "";
+            document.getElementById("usuario").value = "";
+            document.getElementById("etapa").value = "Recepção";
+        }
+    </script>
+</body>
+</html>
